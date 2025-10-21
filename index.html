@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPLP Survey Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, Helvetica, sans-serif; background: #fff; }
+        .container { max-width: 1280px; margin: 0 auto; padding: 24px; }
+        .header { border-bottom: 1px solid #e5e7eb; padding: 24px 0; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-start; }
+        .header-text { flex: 1; }
+        .header h1 { font-size: 30px; color: #1669c9; margin-bottom: 8px; }
+        .header p { color: #64798D; font-size: 16px; }
+        .logo-container { margin-left: 24px; min-width: 450px; max-width: 450px; }
+        .logo-container img { width: 100%; height: auto; }
+        .tabs { display: flex; border-bottom: 2px solid #B5C1CC; margin-bottom: 24px; flex-wrap: wrap; }
+        .tab { padding: 12px 24px; background: none; border: none; cursor: pointer; font-size: 16px; font-weight: bold; color: #64798D; border-bottom: 3px solid transparent; }
+        .tab.active { color: #00467F; border-bottom-color: #00467F; }
+        .tab:hover { background: #f9fafb; }
+        .content { display: none; }
+        .content.active { display: block; }
+        .card { background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 24px; margin-bottom: 24px; }
+        .card h2 { font-size: 24px; margin-bottom: 16px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        .stat-box { text-align: center; padding: 24px; border-radius: 8px; }
+        .stat-box.green { background: #f0fdf4; }
+        .stat-box.gray { background: #f9fafb; }
+        .stat-number { font-size: 48px; font-weight: bold; }
+        .stat-number.green { color: #16a34a; }
+        .stat-number.gray { color: #6b7280; }
+        .stat-label { color: #374151; margin-top: 8px; }
+        .bar-container { margin: 12px 0; }
+        .bar-label { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; }
+        .bar-bg { background: #e5e7eb; height: 32px; border-radius: 16px; overflow: hidden; position: relative; }
+        .bar-fill { height: 100%; display: flex; align-items: center; justify-content: flex-end; padding-right: 12px; color: white; font-size: 12px; font-weight: bold; }
+        .bar-fill.with-label { justify-content: space-between; padding-left: 12px; }
+        .note { background: #E6EDF2; padding: 16px; border-radius: 8px; margin-top: 24px; font-size: 14px; color: #3F5460; }
+        .insight { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 16px; font-size: 14px; }
+        .sample-note { margin-top: 16px; font-size: 14px; color: #6b7280; }
+        @media (max-width: 768px) {
+            .grid { grid-template-columns: 1fr; }
+            .header { flex-direction: column; }
+            .logo-container { margin-left: 0; margin-top: 16px; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-text">
+                <h1>Guide Statewide Math Professional Learning in California</h1>
+                <p>MPLP Survey Dashboard - Data collected through: <strong>October 14, 2025</strong>.</p>
+                <p style="margin-top: 8px;">This survey guides the <strong>Mathematics Professional Learning Partnership Grant (MPLP)</strong> work. Kern County Superintendent of Schools (KCSOS) was awarded the MPLP grant in April 2025 to develop statewide professional learning on the 2023 Mathematics Framework for coaches and teacher leaders. KCSOS is partnering with WestEd, a nonpartisan education research agency, on this survey. The dashboard provides summarized responses on the main items of the survey.</p>
+            </div>
+            <div class="logo-container">
+                <img src="https://westedk12enterprise.co1.qualtrics.com/CP/Graphic.php?IM=IM_brY0wVJy1vvlAq2" alt="MPLP and WestEd Logos" style="width: 100%; height: auto;">
+            </div>
+        </div>
+
+        <p style="color: #64798D; margin-bottom: 16px; font-size: 15px;">Click on the topics displayed on the panel below to see the results:</p>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('overview')">Overview</button>
+            <button class="tab" onclick="showTab('interests')">Teaching Practices</button>
+            <button class="tab" onclick="showTab('integration')">Framework Integration</button>
+            <button class="tab" onclick="showTab('levers')">Instructional Priorities</button>
+            <button class="tab" onclick="showTab('methods')">Learning Methods</button>
+        </div>
+
+        <div id="overview" class="content active">
+            <div class="card">
+                <h2>Survey Response Overview</h2>
+                <div class="grid">
+                    <div>
+                        <canvas id="pieChart" width="300" height="300"></canvas>
+                    </div>
+                    <div style="display: flex; flex-direction: column; justify-content: center; gap: 16px;">
+                        <div class="stat-box green">
+                            <div class="stat-number green">232</div>
+                            <div class="stat-label">Completed Surveys</div>
+                        </div>
+                        <div class="stat-box gray">
+                            <div class="stat-number gray">14</div>
+                            <div class="stat-label">Incomplete Surveys</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Survey Responses by Service Region</h2>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Region 1</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 4.2%; background: #00467F;">4</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Region 2</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 100%; background: #00467F;">96</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Region 4</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 5.2%; background: #00467F;">5</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Region 6</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 34.4%; background: #00467F;">33</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Region 7</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 27.1%; background: #00467F;">26</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Region 8</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 55.2%; background: #00467F;">53</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Region 10</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 7.3%; background: #00467F;">7</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Region 11</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 2%; background: #00467F;">1</div></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Participants by Grade Band</h2>
+                <div class="bar-container">
+                    <div class="bar-label"><span>TK-2</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 94%; background: #00467F;">112</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>3-5</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 100%; background: #00467F;">119</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>6-8</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 97%; background: #00467F;">116</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>9-12</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 71%; background: #00467F;">85</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Other</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 28%; background: #00467F;">33</div></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Participants by Primary Role</h2>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Teacher</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 100%; background: #00467F;">98</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>County Office Staff</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 34%; background: #00467F;">33</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>District/County Coach</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 23%; background: #00467F;">23</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Site-based Administrator</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 15%; background: #00467F;">15</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Superintendent</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 13%; background: #00467F;">13</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Teacher Leader</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 8%; background: #00467F;">8</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Site-based Coach</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 8%; background: #00467F;">8</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>CA Math Project Staff</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 3%; background: #00467F;">3</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Paraprofessional</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 2%; background: #00467F;">2</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Parent</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 1.72%; background: #00467F;">1</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Other</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 37%; background: #00467F;">36</div></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="interests" class="content">
+            <div class="card">
+                <h2 style="color: #1669c9;">Interest in NCTM Effective Mathematics Teaching Practices</h2>
+                <p style="color: #64798D; margin-bottom: 24px;">
+                    The 2023 Mathematics Framework integrates eight National Council of Teachers of Mathematics (NCTM) effective mathematics teaching practices. 
+                    Participants ranked these practices based on their interest in learning more (1 = most curious, 8 = least curious).
+                    Lower average rankings indicate higher interest.
+                </p>
+                <div class="bar-container">
+                    <div class="bar-label">
+                        <span><strong>Rank #1:</strong> Implement tasks that promote reasoning and problem solving</span>
+                        <span>Mean: 3.59</span>
+                    </div>
+                    <div class="bar-bg"><div class="bar-fill with-label" style="width: 100%; background: #043359;"><span>Most Interest</span></div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label">
+                        <span><strong>Rank #2:</strong> Support productive struggle in learning mathematics</span>
+                        <span>Mean: 3.81</span>
+                    </div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 87.5%; background: #174973;"></div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label">
+                        <span><strong>Rank #3:</strong> Build procedural fluency from conceptual understanding</span>
+                        <span>Mean: 4.14</span>
+                    </div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 75%; background: #31638C;"></div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label">
+                        <span><strong>Rank #4:</strong> Facilitate meaningful mathematical discourse</span>
+                        <span>Mean: 4.16</span>
+                    </div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 62.5%; background: #5380A6;"></div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label">
+                        <span><strong>Rank #5:</strong> Establish mathematics goals to focus learning</span>
+                        <span>Mean: 4.92</span>
+                    </div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 50%; background: #7CA1BF;"></div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label">
+                        <span><strong>Rank #6:</strong> Pose purposeful questions</span>
+                        <span>Mean: 4.98</span>
+                    </div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 37.5%; background: #ADC5D9;"></div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label">
+                        <span><strong>Rank #7:</strong> Elicit and use evidence of student thinking</span>
+                        <span>Mean: 5.13</span>
+                    </div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 25%; background: #ADC5D9;"></div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label">
+                        <span><strong>Rank #8:</strong> Use and connect mathematical representations</span>
+                        <span>Mean: 5.27</span>
+                    </div>
+                    <div class="bar-bg"><div class="bar-fill with-label" style="width: 30%; background: #ADC5D9;"><span style="margin-left: auto;">Least Interest</span></div></div>
+                </div>
+                <div class="note">
+                    <strong>Note:</strong> All 237 participants responded to this item. Items are ordered from highest interest (lowest mean) to lowest interest (highest mean).
+                </div>
+            </div>
+        </div>
+
+        <div id="integration" class="content">
+            <div class="card">
+                <h2 style="color: #1669c9;">Framework Integration Difficulty - Coaches & Administrators</h2>
+                <p style="color: #64798D; margin-bottom: 24px;">
+                    Based on experiences observing or engaging in coaching, how easy have coaches/administrators 
+                    found it for teachers to integrate these Framework ideas? (Scale: 1 = Very Difficult, 4 = Very Easy).
+                </p>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Inviting student questions and conjectures</span><span>Difficult (2.42)</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 60.5%; background: #7CA1BF;">2.42</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Promoting positive mathematical identities</span><span>Difficult (2.32)</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 58%; background: #5380A6;">2.32</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Prioritizing reasoning and justification</span><span>Difficult (2.31)</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 57.75%; background: #5380A6;">2.31</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Using open and engaging tasks</span><span>Difficult (2.27)</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 56.75%; background: #31638C;">2.27</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Transitioning from standards to big ideas</span><span>Very Difficult (1.89)</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 47.25%; background: #174973;">1.89</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Teaching toward social justice</span><span>Very Difficult (1.66)</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 41.5%; background: #043359;">1.66</div></div>
+                </div>
+                <div class="note">
+                    <strong>Sample:</strong> 137 coaches, administrators, and project-related staff (including California Mathematics project staff, site-based coaches, district/region/county-based coaches, COE staff, site-based administrators, superintendents, and teacher leaders)
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 style="color: #1669c9;">Framework Integration Difficulty - Teachers</h2>
+                <p style="color: #64798D; margin-bottom: 24px;">
+                    Based on their own teaching experiences, how easy have teachers found it to integrate these Framework ideas?
+                </p>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Inviting student questions and conjectures</span><span>Moderately Easy (3.00)</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 75%; background: #ADC5D9;">3.00</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Prioritizing reasoning and justification</span><span>Moderately Difficult (2.65)</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 66.25%; background: #7CA1BF;">2.65</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Using open and engaging tasks</span><span>Moderately Difficult (2.56)</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 64%; background: #5380A6;">2.56</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Promoting positive mathematical identities</span><span>Difficult (2.51)</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 62.75%; background: #31638C;">2.51</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Transitioning from standards to big ideas</span><span>Difficult (2.34)</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 58.5%; background: #174973;">2.34</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Teaching toward social justice</span><span>Very Difficult (1.93)</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 48.25%; background: #043359;">1.93</div></div>
+                </div>
+                <div class="note">
+                    <strong>Sample:</strong> 99 teachers and paraprofessionals
+                </div>
+            </div>
+
+            <div class="insight">
+                <strong>Key Insight:</strong> "Teaching toward social justice" remains the most difficult idea to integrate by both groups, while teachers find "inviting student questions and conjectures" the easiest to implement.
+            </div>
+        </div>
+
+        <div id="levers" class="content">
+            <div class="card">
+                <h2 style="color: #1669c9;">Instructional Levers for Improving Mathematics Teaching</h2>
+                <p style="color: #64798D; margin-bottom: 24px;">
+                    Participants ranked which four instructional levers would most improve mathematics teaching and learning 
+                    in their context (1-4 scale, where 1 = first choice). Lower mean scores indicate higher priority.
+                </p>
+                <div class="bar-container">
+                    <div class="bar-label"><span>High-quality, aligned curriculum</span><span>Highest Priority (1.93)</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 100%; background: #043359;">1.93</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Sustained coaching support</span><span>High Priority (2.47)</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 76%; background: #174973;">2.47</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Understanding learning progressions</span><span>High Priority (2.49)</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 75%; background: #174973;">2.49</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Teacher recruitment & retention</span><span>High Priority (2.52)</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 73%; background: #31638C;">2.52</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>District culture oriented towards equity</span><span>High Priority (2.61)</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 70%; background: #5380A6;">2.61</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Professional Learning</span><span>High Priority (2.62)</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 69%; background: #5380A6;">2.62</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Support with assessment data</span><span>Medium Priority (2.78)</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 60%; background: #7CA1BF;">2.78</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Support from instructional leadership</span><span>Medium Priority (2.80)</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 59%; background: #7CA1BF;">2.80</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Technology integration systems</span><span>Medium Priority (2.97)</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 52%; background: #ADC5D9;">2.97</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Family and community education</span><span>Lower Priority (3.00)</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 51%; background: #ADC5D9;">3.00</div></div>
+                </div>
+                <div class="note">
+                    <strong>Note:</strong> This question was not asked to parents and community members. 
+                    Number of responses varies by item as participants selected their top four priorities.
+                </div>
+            </div>
+        </div>
+
+        <div id="methods" class="content">
+            <div class="card">
+                <h2>Preferred Professional Learning Methods - Coaches & Administrators</h2>
+                <p style="color: #6b7280; margin-bottom: 24px;">
+                    What would be most effective to support coaches and administrators? (Participants selected top two methods)
+                </p>
+                <div class="bar-container">
+                    <div class="bar-label"><span>In-person professional learning</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 100%; background: #10b981;">77</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Mix of in-person and online</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 90%; background: #10b981;">69</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Local professional learning communities</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 73%; background: #10b981;">56</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Online statewide PLCs (similar contexts)</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 38%; background: #10b981;">29</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Synchronous online</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 13%; background: #10b981;">10</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Asynchronous online</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 10%; background: #10b981;">8</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Online statewide PLCs (context agnostic)</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 3%; background: #10b981;">2</div></div>
+                </div>
+                <div class="note">
+                    <strong>Sample:</strong> 137 coaches, administrators, and project-related staff (including California Mathematics project staff, site-based coaches, district/region/county-based coaches, COE staff, site-based administrators, superintendents, and teacher leaders)
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Preferred Professional Learning Methods - Teachers</h2>
+                <p style="color: #6b7280; margin-bottom: 24px;">
+                    What would be most effective to support teachers? (Participantsselected top two methods)
+                </p>
+                <div class="bar-container">
+                    <div class="bar-label"><span>In-person professional learning</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 100%; background: #3b82f6;">61</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Local professional learning communities</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 70%; background: #3b82f6;">43</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Mix of in-person and online</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 54%; background: #3b82f6;">33</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Online statewide PLCs (similar contexts)</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 30%; background: #3b82f6;">18</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Asynchronous online</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 20%; background: #3b82f6;">12</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Synchronous online</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 8%; background: #3b82f6;">5</div></div>
+                </div>
+                <div class="bar-container">
+                    <div class="bar-label"><span>Online statewide PLCs (context agnostic)</span></div>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 3%; background: #3b82f6;">2</div></div>
+                </div>
+                <div class="note">
+                    <strong>Sample:</strong> 99 teachers and paraprofessionals
+                </div>
+            </div>
+
+            <div style="background: #f0fdf4; border-left: 4px solid #16a34a; padding: 16px; font-size: 14px;">
+                <strong>Key Insight:</strong> Both groups strongly prefer in-person professional learning. 
+                Local professional learning communities are also highly valued by both groups.
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Hide all content
+            var contents = document.getElementsByClassName('content');
+            for (var i = 0; i < contents.length; i++) {
+                contents[i].classList.remove('active');
+            }
+            
+            // Remove active from all tabs
+            var tabs = document.getElementsByClassName('tab');
+            for (var i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+            
+            // Show selected content and activate tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Draw pie chart
+        window.onload = function() {
+            var canvas = document.getElementById('pieChart');
+            var ctx = canvas.getContext('2d');
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Data - Updated values: 232 completed, 14 incomplete
+            var data = [232, 14];
+            var colors = ['#00467F', '#B5C1CC'];
+            var labels = ['Completed: 94%', 'Incomplete: 6%'];
+            
+            // Calculate total
+            var total = data.reduce(function(a, b) { return a + b; }, 0);
+            
+            // Draw pie
+            var currentAngle = -Math.PI / 2;
+            var centerX = canvas.width / 2;
+            var centerY = canvas.height / 2;
+            var radius = 100;
+            
+            for (var i = 0; i < data.length; i++) {
+                var sliceAngle = (data[i] / total) * 2 * Math.PI;
+                
+                ctx.beginPath();
+                ctx.fillStyle = colors[i];
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, currentAngle, currentAngle + sliceAngle);
+                ctx.closePath();
+                ctx.fill();
+                
+                // Draw label
+                var labelAngle = currentAngle + sliceAngle / 2;
+                var labelX = centerX + Math.cos(labelAngle) * (radius + 30);
+                var labelY = centerY + Math.sin(labelAngle) * (radius + 30);
+                
+                ctx.fillStyle = '#000';
+                ctx.font = '14px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(labels[i], labelX, labelY);
+                
+                currentAngle += sliceAngle;
+            }
+        };
+    </script>
+</body>
+</html>
